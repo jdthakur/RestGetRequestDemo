@@ -20,37 +20,29 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-
-
     //HTTPGet HttpClient
     //   compile 'org.apache.httpcomponents:httpclient:4.5'
-
-
     //new Library
     compile 'org.apache.httpcomponents:httpcore:4.4.1'
-
     // https://mvnrepository.com/artifact/com.squareup.retrofit/retrofit
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
-
     //in buil okhttp is add in Retrofit we exclude
     compile('com.squareup.retrofit2:retrofit:2.3.0') {
         // exclude Retrofit’s OkHttp peer-dependency module and define your own module import
         exclude module: 'okhttp'
     }
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
-    
     //Get the Data in JSON use gson lib
     compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-
     testCompile 'junit:junit:4.12'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
 }
 
 

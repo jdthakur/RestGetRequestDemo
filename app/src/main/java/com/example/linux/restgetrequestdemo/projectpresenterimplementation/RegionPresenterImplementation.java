@@ -1,6 +1,5 @@
 package com.example.linux.restgetrequestdemo.projectpresenterimplementation;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.linux.restgetrequestdemo.ProjectPresenter.RegionPresenter;
@@ -10,7 +9,6 @@ import com.example.linux.restgetrequestdemo.retrofituse.model.Region;
 import com.example.linux.restgetrequestdemo.retrofituse.projectconstant.RetrofitConstant;
 import com.example.linux.restgetrequestdemo.retrofituse.retrofitmaincall.ServiceGenerator;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,80 +32,40 @@ public class RegionPresenterImplementation implements RegionPresenter {
 
     RegionView mRegionView;
 
-    Response<List<Region>> mFresponse;
+    List<Region> mRegions = new ArrayList<>();
 
     public RegionPresenterImplementation(RegionView mRegionView) {
         this.mRegionView = mRegionView;
     }
 
     @Override
-    public List<Region> getRegion() {
+    public void loadRegions() {
 
         mRegionView.onRegionProgress();
 
         mRegion = ServiceGenerator.getDataFromAPI(RetrofitConstant.mBaseUrl);
         mApiGetService = mRegion.create(APIGetService.class);
 
-        mResult = mApiGetService.getData();
 
-        mResult.enqueue(new Callback<List<Region>>()
-        {
+        mResult = mApiGetService.getData(ServiceGenerator.getHeaders());
+
+        mResult.enqueue(new Callback<List<Region>>() {
             @Override
             public void onResponse(Call<List<Region>> call, Response<List<Region>> response) {
-
-                mFresponse = response;
-                AsyncRegin mLocRegion = new AsyncRegin();
-
-                mLocRegion.execute();
-
-
-
-
+                mRegions.clear();
+                mRegions.addAll(response.body());
+                mRegionView.onRegionSuccess(mRegions);
+                mRegionView.onRegionDismiss();
             }
 
             @Override
             public void onFailure(Call<List<Region>> call, Throwable t) {
-                Log.d("RegionImplementation","Fail");
+                Log.d("RegionImplementation", "Fail");
                 mRegionView.onRegionError("Get Error In API Call");
                 mRegionView.onRegionDismiss();
 
             }
         });
-
-
-
-
-        return mFinalRegion;
     }
-
-
-
-     public class AsyncRegin extends AsyncTask<Void,Void,Void>{
-
-
-
-        @Override
-        protected Void doInBackground(Void... params)
-        {
-
-            int StatusCode = mFresponse.code();
-
-            Log.d("RegionImplementation",""+StatusCode);
-
-            mFinalRegion = mFresponse.body();
-
-            Log.d("Item",mFinalRegion.toString());
-
-
-            mRegionView.onRegionSuccessful("Get All Regions");
-
-
-
-            return null;
-        }
-    };
-
-
-
 
 }
